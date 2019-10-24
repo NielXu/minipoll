@@ -51,7 +51,7 @@ app.get('/status', async(req, res, next) => {
  * ------------
  * message: Error message
  */
-app.post('/create', (req, res, next) => {
+app.post('/api/v1/rooms/create', (req, res, next) => {
     res.header('Content-Type', 'application/json');
     const result = checkRequest(req.body, CREATE_REQUIRED, CREATE_OPTIONAL);
     if(!result.valid) {
@@ -75,7 +75,7 @@ app.post('/create', (req, res, next) => {
     })
 })
 
-app.get('/:rid', (req, res, next) => {
+app.get('/api/v1/rooms/:rid', (req, res, next) => {
     res.header('Content-Type', 'application/json');
     const rid = req.params.rid;
     get(default_dbname, 'polls', {rid: rid}, function(err, result) {
