@@ -10,7 +10,9 @@ export default class App extends React.Component {
     }
 
     componentDidMount() {
-
+        setInterval(() => {
+            this.setState({now: this.state.now + 1});
+        }, 1000);
     }
 
     render() {
