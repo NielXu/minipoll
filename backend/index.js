@@ -149,9 +149,11 @@ app.patch('/api/v1/rooms/:rid', (req, res, next) => {
                     return res.status(401).json({message: 'Access denied'});
                 }
             }
-            update(default_dbname, 'polls', {rid: rid}, {$set: req.body}, function(err, result) {
-                return res.json({message: 'Success'});
-            })
+            else {
+                update(default_dbname, 'polls', {rid: rid}, {$set: req.body}, function(err, result) {
+                    return res.json({message: 'Success'});
+                })
+            }
         }
     })
 })

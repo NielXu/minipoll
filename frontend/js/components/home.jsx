@@ -177,7 +177,7 @@ export default class Home extends React.Component {
                     )}
                     <Button variant="primary" type="submit" onClick={this.onSubmitClick}>Submit</Button>
                 </Form>
-                {this.state.successRedirect && <Redirect to={{pathname:`/${this.state.rid}`, password: this.state.password}}/>}
+                {this.state.successRedirect && <Redirect push to={{pathname:`/${this.state.rid}`, password: this.state.password}}/>}
             </div>
         )
     }
