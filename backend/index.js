@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const shortid = require('shortid');
-const { init, get, insert, default_dbname } = require('./database');
+const { init, get, insert, default_dbname, update } = require('./database');
 const app = express();
 
 CREATE_REQUIRED = {
@@ -13,6 +13,15 @@ CREATE_OPTIONAL = {
     "password": "string"
 }
 
+PATCH_REQUIRED = {
+    "title": "string",
+    "options": "object",
+    "description": "string",
+    "password": "string"
+}
+
+shortid.characters('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$@');
+app.use('/static', express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'static/')));
 app.use(express.json());
 app.get('/status', async(req, res, next) => {
@@ -90,7 +99,59 @@ app.get('/api/v1/rooms/:rid', (req, res, next) => {
             return res.status(500).json({message: 'Server side error', error: 'Collision'});
         }
         else {
+            if(result[0].password !== "") {
+                const password = req.query.password;
+                if(!password) {
+                    return res.status(400).json({message: 'Password required'});
+                }
+                if(password === result[0].password) {
+                    return res.json({data: result[0]});
+                }
+                else {
+                    return res.status(401).json({message: 'Access denied'});
+                }
+            }
             return res.json({data: result[0]});
+        }
+    })
+})
+
+app.patch('/api/v1/rooms/:rid', (req, res, next) => {
+    res.header('Content-Type', 'application/json');
+    const result = checkPatchRequest(req.body, PATCH_REQUIRED);
+    if(!result.valid) {
+        return res.status(400).json({message: result.message});
+    }
+    const rid = req.params.rid;
+    get(default_dbname, 'polls', {rid: rid}, function(err, result) {
+        if(err) {
+            return res.status(500).json({message: 'Server side error', error: err});
+        }
+        if(result.length === 0) {
+            return res.json({message: 'Room not found with given id'});
+        }
+        else if(result.length > 1) {
+            console.log(`Collision happened with room id: ${rid}`);
+            return res.status(500).json({message: 'Server side error', error: 'Collision'});
+        }
+        else {
+            if(result[0].password !== "") {
+                const password = req.body.password;
+                if(!password) {
+                    return res.status(400).json({message: 'Password required'});
+                }
+                if(password === result[0].password) {
+                    update(default_dbname, 'polls', {rid: rid}, {$set: req.body}, function(err, result) {
+                        return res.json({message: 'Success'});
+                    });
+                }
+                else {
+                    return res.status(401).json({message: 'Access denied'});
+                }
+            }
+            update(default_dbname, 'polls', {rid: rid}, {$set: req.body}, function(err, result) {
+                return res.json({message: 'Success'});
+            })
         }
     })
 })
@@ -149,6 +210,39 @@ function processOptions(options) {
         proc[options[i]] = 0;
     }
     return proc
+}
+
+/**
+ * Check if patch request if proper
+ * 
+ * @param {Object} body Request body
+ * @param {Object} req Required fields
+ */
+function checkPatchRequest(body, req) {
+    if(!body) {
+        return {valid: false, message: "Missing body"}
+    }
+    for(var key in body) {
+        if(!req.hasOwnProperty(key)) {
+            delete body[key]
+        }
+        else if(typeof(body[key]) != req[key]) {
+            return {valid: false, message: `Expect ${required[key]} for ${key}`}
+        }
+    }
+    return {valid: true}
+}
+
+/**
+ * 
+ * Check options in patch request to see if it matches
+ * the database
+ * 
+ * @param {Object} options Options in request
+ * @param {Object} origin Original options
+ */
+function checkPatchOptions(options, origin) {
+
 }
 
 /**
