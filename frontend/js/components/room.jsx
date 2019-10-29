@@ -1,6 +1,7 @@
 import React from 'react';
 import { InputGroup, Form, Button, ProgressBar } from 'react-bootstrap';
- 
+import '../../css/room.css'; 
+
 export default class Room extends React.Component {
     constructor(props) {
         super(props);
@@ -129,8 +130,9 @@ export default class Room extends React.Component {
                 dist[key] = options[key] / total;
             }
             elements.push(
-                <div className="progress-bar">
-                    <ProgressBar now={dist[key] * 100} label={`${options[key]} (${Math.round(dist[key] * 100)}%)`}/>
+                <div className="poll-results">
+                    <span className="poll-results-label">{key}</span>
+                    <ProgressBar animated now={dist[key] * 100} label={`${options[key]} (${Math.round(dist[key] * 100)}%)`} style={{height: '30px'}}/>
                 </div>
             )
         }
@@ -141,7 +143,7 @@ export default class Room extends React.Component {
         let elements = [];
         const options = this.state.data.options;
         for(var key in options) {
-            elements.push(<Button variant="outline-primary" data-key={key} onClick={this.onOptionClick}>{key}</Button>);
+            elements.push(<div><Button variant="outline-primary" data-key={key} onClick={this.onOptionClick}>{key}</Button></div>);
         }
         return elements;
     }
@@ -179,7 +181,8 @@ export default class Room extends React.Component {
     render() {
         if(this.state.private && !this.state.auth) {
             return (
-                <div>
+                <div className="center-content">
+                    <h2 className="center-content-title">Password required</h2>
                     <Form>
                         <InputGroup className="mb-3">
                             <InputGroup.Prepend>
@@ -210,18 +213,22 @@ export default class Room extends React.Component {
             }
             if(this.state.voted) {
                 return (
-                    <div>
+                    <div className="center-content">
                         <h2>{this.state.data.title}</h2>
-                        <h3>{this.state.data.description&& this.state.data.description}</h3>
-                        {this.renderProgressBar()}
+                        <h4>{this.state.data.description&& this.state.data.description}</h4>
+                        <div className="options">
+                            {this.renderProgressBar()}
+                        </div>
                     </div>
                 )
             }
             return (
-                <div>
+                <div className="center-content">
                     <h2>{this.state.data.title}</h2>
-                    <h3>{this.state.data.description&& this.state.data.description}</h3>
-                    {this.renderOptions()}
+                    <h4>{this.state.data.description&& this.state.data.description}</h4>
+                    <div className="options">
+                        {this.renderOptions()}
+                    </div>
                 </div>
             )
         }
