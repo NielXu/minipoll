@@ -1,8 +1,24 @@
 version: '3.5'
+
 services:
-  minipoll-mongo:
-    image: mongo
-    volumes:
-      - minipoll-mongo-db:/data/db
+  minipoll-app:
+    container_name: minipoll-app
+    image: niellxu/minipoll-app
+    environment:
+      - HOST=minipoll-mongo
+      - NODE_ENV=dev
+    restart: always
+    build: .
     ports:
-      - 27017:27107
+      - "5000:5000"
+    links:
+      - minipoll-mongo
+
+  minipoll-mongo:
+    container_name: minipoll-mongo
+    image: mongo
+    # We are not saving volumes for now
+    # volumes:
+    #   - minipoll-mongo-db:/data/db
+    ports:
+      - "27017:27107"

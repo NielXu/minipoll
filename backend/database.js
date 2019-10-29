@@ -2,7 +2,7 @@ const MongoClient = require('mongodb').MongoClient;
 const uuid4 = require('uuid/v4');
 
 HOST = process.env.HOST? process.env.HOST : 'localhost';
-PORT = process.env.PORT? process.env.PORT : '27018';
+PORT = process.env.PORT? process.env.PORT : '27017';
 const URL = `mongodb://${HOST}:${PORT}`;
 let db_instance;
 const default_dbname = "pollDB";
@@ -14,7 +14,8 @@ const default_dbname = "pollDB";
  * @param {Function} callback Callback after database initialization
  */
 function init(callback) {
-    console.log("Initializing database")
+    console.log("Initializing database");
+    console.log(`Attempting to connect ${URL}`);
     MongoClient.connect(URL, {useUnifiedTopology: true, useNewUrlParser: true}, function(err, db) {
             db_instance = db;
             if(process.env.NODE_ENV === 'dev') {

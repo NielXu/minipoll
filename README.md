@@ -2,24 +2,10 @@
 Minipoll is an easy to used website for polling. You can quickly setup a poll here and let everyeone vote for it, or setup a private poll for your freinds only.
 
 # Dev
-First of all, install the necessary dependencies
-```sh
-npm install
+Using docker-compose to easily build and start the project
 ```
-Build the frontend code
-```sh
-npm run build
-```
-Start the development database
-```sh
-docker-compose up -d
-```
-Lastly, start the development server and listen to port 5000
-```sh
-npm start
-```
-Remember to stop the container after developing
-```sh
+docker-compose build
+docker-compose up
 docker-compose down
 ```
 
