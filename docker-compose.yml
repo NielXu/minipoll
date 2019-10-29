@@ -1,0 +1,8 @@
+version: '3.5'
+services:
+  minipoll-mongo:
+    image: mongo
+    volumes:
+      - minipoll-mongo-db:/data/db
+    ports:
+      - 27017:27107

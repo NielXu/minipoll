@@ -12,7 +12,7 @@ npm run build
 ```
 Start the development database
 ```sh
-./startdb.mongo.sh
+docker-compose up -d
 ```
 Lastly, start the development server and listen to port 5000
 ```sh
@@ -20,7 +20,7 @@ npm start
 ```
 Remember to stop the container after developing
 ```sh
-docker stop poll_database
+docker-compose down
 ```
 
 # Staging
