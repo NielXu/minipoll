@@ -1,0 +1,11 @@
+.center-content {
+    width: 35%;
+    height: 100%;
+    text-align: center;
+    margin: auto;
+    padding-top: 7%;
+}
+
+.center-content-title {
+    margin-bottom: 7%;
+}

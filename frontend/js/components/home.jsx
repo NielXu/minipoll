@@ -1,6 +1,7 @@
 import React from 'react';
 import { Form, Button, InputGroup } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
+import '../../css/home.css';
 
 export default class Home extends React.Component {
     constructor(props) {
@@ -154,7 +155,8 @@ export default class Home extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="center-content">
+                <h2 className="center-content-title">Minipoll</h2>
                 <Form noValidate validated={this.state.validated}>
                     <Form.Group>
                         <Form.Control type="text" placeholder="Poll Title" onChange={this.onTitleChange} required/>

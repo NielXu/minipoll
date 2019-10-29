@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import Home from './components/home';
 import Room from './components/room';
+import '../css/root.css';
 
 export default class App extends React.Component {
 
