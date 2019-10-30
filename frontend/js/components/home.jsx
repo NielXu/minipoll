@@ -1,6 +1,8 @@
 import React from 'react';
 import { Form, Button, InputGroup } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
+import Sidebar from 'react-sidebar';
+import Trending from './trending';
 import '../../css/home.css';
 
 export default class Home extends React.Component {
@@ -18,6 +20,7 @@ export default class Home extends React.Component {
             validated: false,
             successRedirect: false,
             rid: "",
+            sidebarOpen: false,
         }
         this.onTitleChange = this.onTitleChange.bind(this);
         this.onDescriptionChange = this.onDescriptionChange.bind(this);
@@ -27,6 +30,7 @@ export default class Home extends React.Component {
         this.onAddOptionClick = this.onAddOptionClick.bind(this);
         this.onSubmitClick = this.onSubmitClick.bind(this);
         this.onDeleteOptionClick = this.onDeleteOptionClick.bind(this);
+        this.onSetSidebarOpen = this.onSetSidebarOpen.bind(this);
     }
 
     componentDidMount() {
@@ -153,33 +157,49 @@ export default class Home extends React.Component {
         return elements;
     }
 
+    onSetSidebarOpen(open) {
+        this.setState({ sidebarOpen: open });
+    }
+
     render() {
         return (
-            <div className="center-content">
-                <h2 className="center-content-title">Minipoll</h2>
-                <Form noValidate validated={this.state.validated}>
-                    <Form.Group>
-                        <Form.Control type="text" placeholder="Poll Title" onChange={this.onTitleChange} required/>
-                        <Form.Control.Feedback type="invalid">Title cannot be empty</Form.Control.Feedback>
-                    </Form.Group>
-                    <Form.Group>
-                        <Form.Control type="text" placeholder="Poll Description (Optional)" onChange={this.onDescriptionChange}/>
-                    </Form.Group>
-                    <Form.Group>
-                        <Button variant="primary" onClick={this.onAddOptionClick}>Add Option</Button>
-                    </Form.Group>
-                    {this.renderOptions()}
-                    <Form.Group controlId="formBasicCheckbox">
-                        <Form.Check type="checkbox" label="Private" onClick={this.onPrivateClick} />
-                    </Form.Group>
-                    {this.state.private && (
+            <div>
+                <Sidebar
+                    sidebar={<Trending/>}
+                    open={this.state.sidebarOpen}
+                    onSetOpen={this.onSetSidebarOpen}
+                    styles={{ sidebar: { background: "white" } }}
+                >
+                    <Button onClick={() => this.onSetSidebarOpen(true)}>
+                        Explore
+                    </Button>
+                </Sidebar>
+                <div className="center-content">
+                    <h2 className="center-content-title">Minipoll</h2>
+                    <Form noValidate validated={this.state.validated}>
                         <Form.Group>
-                            <Form.Control type="password" placeholder="Password" onChange={this.onPasswordChange} required/>
+                            <Form.Control type="text" placeholder="Poll Title" onChange={this.onTitleChange} required/>
+                            <Form.Control.Feedback type="invalid">Title cannot be empty</Form.Control.Feedback>
                         </Form.Group>
-                    )}
-                    <Button variant="primary" type="submit" onClick={this.onSubmitClick}>Submit</Button>
-                </Form>
-                {this.state.successRedirect && <Redirect push to={{pathname:`/${this.state.rid}`, password: this.state.password}}/>}
+                        <Form.Group>
+                            <Form.Control type="text" placeholder="Poll Description (Optional)" onChange={this.onDescriptionChange}/>
+                        </Form.Group>
+                        <Form.Group>
+                            <Button variant="primary" onClick={this.onAddOptionClick}>Add Option</Button>
+                        </Form.Group>
+                        {this.renderOptions()}
+                        <Form.Group controlId="formBasicCheckbox">
+                            <Form.Check type="checkbox" label="Private" onClick={this.onPrivateClick} />
+                        </Form.Group>
+                        {this.state.private && (
+                            <Form.Group>
+                                <Form.Control type="password" placeholder="Password" onChange={this.onPasswordChange} required/>
+                            </Form.Group>
+                        )}
+                        <Button variant="primary" type="submit" onClick={this.onSubmitClick}>Submit</Button>
+                    </Form>
+                    {this.state.successRedirect && <Redirect push to={{pathname:`/${this.state.rid}`, password: this.state.password}}/>}
+                </div>
             </div>
         )
     }

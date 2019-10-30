@@ -27,3 +27,4 @@ This website is not ready for production.
 - [ ] Prevent user from entering duplicated options
 - [x] Styling homepage
 - [x] Prevent user from voting multiple times
+- [ ] Add trending public polls
