@@ -173,8 +173,7 @@ export default class Home extends React.Component {
                     <Button onClick={() => this.onSetSidebarOpen(true)}>
                         Explore
                     </Button>
-                </Sidebar>
-                <div className="center-content">
+                    <div className="center-content">
                     <h2 className="center-content-title">Minipoll</h2>
                     <Form noValidate validated={this.state.validated}>
                         <Form.Group>
@@ -200,6 +199,7 @@ export default class Home extends React.Component {
                     </Form>
                     {this.state.successRedirect && <Redirect push to={{pathname:`/${this.state.rid}`, password: this.state.password}}/>}
                 </div>
+                </Sidebar>
             </div>
         )
     }

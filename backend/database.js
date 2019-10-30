@@ -46,21 +46,24 @@ function init(callback) {
 function get(db_name, collec_name, query, callback, options) {
     if(options) {
         const limit = options.limit, skip = options.skip;
+        const sortby = options.sortby? options.sortby : '_id';
+        let sort = {};
+        sort[sortby] = -1;
         if(limit && skip) {
-            db_instance.db(db_name).collection(collec_name).find(query).limit(limit).skip(skip).toArray(callback);
+            db_instance.db(db_name).collection(collec_name).find(query).sort(sort).limit(limit).skip(skip).toArray(callback);
         }
         else if(skip) {
-            db_instance.db(db_name).collection(collec_name).find(query).skip(skip).toArray(callback);
+            db_instance.db(db_name).collection(collec_name).find(query).sort(sort).skip(skip).toArray(callback);
         }
         else if(limit) {
-            db_instance.db(db_name).collection(collec_name).find(query).limit(limit).toArray(callback);
+            db_instance.db(db_name).collection(collec_name).find(query).sort(sort).limit(limit).toArray(callback);
         }
         else {
-            db_instance.db(db_name).collection(collec_name).find(query).toArray(callback);
+            db_instance.db(db_name).collection(collec_name).find(query).sort(sort).toArray(callback);
         }
     }
     else {
-        db_instance.db(db_name).collection(collec_name).find(query).toArray(callback);
+        db_instance.db(db_name).collection(collec_name).find(query).sort({'_id': -1}).toArray(callback);
     }
 }
 

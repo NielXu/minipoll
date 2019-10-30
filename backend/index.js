@@ -75,6 +75,7 @@ app.post('/api/v1/rooms/create', (req, res, next) => {
         title: req.body.title,
         description: req.body.description? req.body.description: "",
         password: req.body.password? req.body.password: "",
+        total: 0,
     }
     insert(default_dbname, "polls", [doc], function(err, result) {
         if(err) {
@@ -82,6 +83,23 @@ app.post('/api/v1/rooms/create', (req, res, next) => {
         }
         return res.json({message: 'Success', rid: doc.rid});
     })
+})
+
+app.get('/api/v1/rooms', (req, res, next) => {
+    res.header('Content-Type', 'application/json');
+    let options = {};
+    if(req.query.sortby) {
+        options['sortby'] = req.query.sortby;
+    }
+    if(req.query.limit) {
+        options['limit'] = Number(req.query.limit);
+    }
+    get(default_dbname, 'polls', {}, function(err, result) {
+        if(err) {
+            return res.status(500).json({message: 'Server side error', error: err});
+        }
+        return res.json({data: result});
+    }, options);
 })
 
 app.get('/api/v1/rooms/:rid', (req, res, next) => {
@@ -141,6 +159,12 @@ app.patch('/api/v1/rooms/:rid', (req, res, next) => {
                     return res.status(400).json({message: 'Password required'});
                 }
                 if(password === result[0].password) {
+                    let options = req.body.options;
+                    let total = 0;
+                    for(var key in options) {
+                        total += options[key];
+                    }
+                    req.body['total'] = total;
                     update(default_dbname, 'polls', {rid: rid}, {$set: req.body}, function(err, result) {
                         return res.json({message: 'Success'});
                     });
@@ -150,6 +174,12 @@ app.patch('/api/v1/rooms/:rid', (req, res, next) => {
                 }
             }
             else {
+                let options = req.body.options;
+                let total = 0;
+                for(var key in options) {
+                    total += options[key];
+                }
+                req.body['total'] = total;
                 update(default_dbname, 'polls', {rid: rid}, {$set: req.body}, function(err, result) {
                     return res.json({message: 'Success'});
                 })
