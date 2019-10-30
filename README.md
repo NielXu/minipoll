@@ -25,5 +25,5 @@ This website is not ready for production.
 
 # TODO
 - [ ] Prevent user from entering duplicated options
-- [ ] Styling homepage
+- [x] Styling homepage
 - [ ] Prevent user from voting multiple times

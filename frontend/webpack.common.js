@@ -3,7 +3,7 @@ module.exports = {
 
     output: {
         path: __dirname + '/../backend/static',
-        filename: 'bundle.js'
+        filename: 'pack.js'
     },
 
     resolve: {

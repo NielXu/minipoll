@@ -46,6 +46,18 @@ export default class Room extends React.Component {
         })
         .then(data => {
             this.setState({loading: false, auth:true, data: data.data});
+            if(localStorage.getItem('polls_voted')) {
+                let voted;
+                try {
+                    voted = JSON.parse(localStorage.getItem('polls_voted'))['voted'];
+                }
+                catch(e) {
+                    localStorage.removeItem('polls_voted');
+                }
+                if(voted.includes(this.state.rid)) {
+                    this.setState({voted: true});
+                }
+            }
         })
         .catch(error => {
             this.setState({error: error, loading: false});
@@ -72,6 +84,18 @@ export default class Room extends React.Component {
             }
             else {
                 this.setState({data: data.data});
+                if(localStorage.getItem('polls_voted')) {
+                    let voted;
+                    try {
+                        voted = JSON.parse(localStorage.getItem('polls_voted'))['voted'];
+                    }
+                    catch(e) {
+                        localStorage.removeItem('polls_voted');
+                    }
+                    if(voted.includes(this.state.rid)) {
+                        this.setState({voted: true});
+                    }
+                }
             }
             this.setState({loading: false});
         })
@@ -103,6 +127,18 @@ export default class Room extends React.Component {
             })
             .then(data => {
                 this.setState({loading: false, auth:true, data: data.data});
+                if(localStorage.getItem('polls_voted')) {
+                    let voted;
+                    try {
+                        voted = JSON.parse(localStorage.getItem('polls_voted'))['voted'];
+                    }
+                    catch(e) {
+                        localStorage.removeItem('polls_voted');
+                    }
+                    if(voted.includes(this.state.rid)) {
+                        this.setState({voted: true});
+                    }
+                }
             })
             .catch(error => {
                 this.setState({passwordMsg: error, loading: false});
@@ -172,6 +208,22 @@ export default class Room extends React.Component {
         .then(data => {
             console.log(data);
             this.setState({voted: true});
+            if(localStorage.getItem('polls_voted')) {
+                let voted;
+                try {
+                    voted = JSON.parse(localStorage.getItem('polls_voted'))['voted'];
+                }
+                catch(e) {
+                    localStorage.removeItem('polls_voted');
+                    localStorage.setItem('polls_voted', JSON.stringify({voted: [this.state.rid]}));
+                    return
+                }
+                voted.push(this.state.rid);
+                localStorage.setItem('polls_voted', JSON.stringify({voted: voted}));
+            }
+            else {
+                localStorage.setItem('polls_voted', JSON.stringify({voted: [this.state.rid]}));
+            }
         })
         .catch(error => {
             console.log(error);
